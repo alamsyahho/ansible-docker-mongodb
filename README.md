@@ -2,11 +2,11 @@
 
 ###### 1. Update terraform variables
 There are several variable that you might need to update in `variables.tf` based on your local environment setup
-a. `public_key_path` set this to your public key path
-b. `key_name` unique key pair identifier name
-c. `domain` private hosted domain for internal hostname
-d. `instance_type` set to the instance_type that you will use to run the instance
-e. `num_instances` number of the instances that will be provision by terraform
+* `public_key_path` set this to your public key path
+* `key_name` unique key pair identifier name
+* `domain` private hosted domain for internal hostname
+* `instance_type` set to the instance_type that you will use to run the instance
+* `num_instances` number of the instances that will be provision by terraform
 
 ###### 2. Configure AWS access and secret key
 Before we start, you have to configure the aws secret key and access key inside secret.tf
