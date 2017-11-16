@@ -1,0 +1,7 @@
+mongo_version: 3.4.10
+docker_instance_name: mongodb
+mongodb_port: 27017
+mongodb_host_dir: /etc/mongo
+mongodb_datadir: /data/db
+mongodb_logdir: /var/log/mongodb
+replica_set_name: rs0

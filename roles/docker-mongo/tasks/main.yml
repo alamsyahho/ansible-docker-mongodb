@@ -1,0 +1,43 @@
+---
+- name: pull docker mongo image
+  docker_image:
+    name: mongo
+    tag: "{{ mongo_version }}"
+
+- name: ensure {{ mongodb_host_dir }} exist
+  file:
+    name: "{{ mongodb_host_dir }}"
+    state: directory
+
+- name: copy secret file
+  copy:
+    src: secret
+    dest: "{{ mongodb_host_dir }}/secret"
+    owner: 999
+    group: 999
+    mode: 0400
+
+- name: ensure {{ mongodb_logdir }} exist
+  file:
+    name: "{{ mongodb_logdir }}"
+    state: directory
+    owner: 999
+    group: 999
+    mode: 0755
+
+- name: start mongodb containers
+  docker_container:
+    name: "{{ docker_instance_name }}"
+    image: "docker.io/mongo:{{ mongo_version }}"
+    state: started
+    command: "mongod --replSet {{ replica_set_name }} --logpath {{mongodb_logdir}}/mongodb.log --logappend --keyFile {{ mongodb_datadir}}/secret"
+    volumes:
+      - "{{ mongodb_logdir }}:{{ mongodb_logdir }}"
+      - "{{ mongodb_host_dir }}/secret:{{ mongodb_datadir }}/secret"
+    ports:
+      - "0.0.0.0:{{ mongodb_port }}:{{ mongodb_port }}"
+
+- include: mongod-replica.yml
+  when:
+    - inventory_hostname == ansible_play_hosts | first
+  static: false

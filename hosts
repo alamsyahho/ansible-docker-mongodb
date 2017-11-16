@@ -1,0 +1,4 @@
+[mongo-servers]
+mongo1.test.com   ansible_host=xx.xx.xx.xx
+mongo2.test.com   ansible_host=xx.xx.xx.xx
+mongo3.test.com   ansible_host=xx.xx.xx.xx

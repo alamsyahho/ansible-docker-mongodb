@@ -1,0 +1,10 @@
+- name: install docker package
+  yum:
+    name: docker
+    state: present
+
+- name: start and enable docker service on boot
+  service:
+    name: docker
+    state: started
+    enabled: true

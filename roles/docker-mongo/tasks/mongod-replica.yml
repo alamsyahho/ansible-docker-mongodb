@@ -1,0 +1,18 @@
+---
+- name: create the file to initialize mongod replica set
+  template:
+    src: repset_init.j2
+    dest: "{{ mongodb_logdir }}/repset_init.js"
+
+- name: initialize replication set
+  shell: "docker exec {{ docker_instance_name }} mongo {{ mongodb_logdir }}/repset_init.js"
+
+- pause:
+    seconds: 20
+
+- name: check replica set status
+  shell: docker exec {{ docker_instance_name }} mongo --eval "printjson(rs.status())"
+  register: rs_status
+
+- debug:
+    msg: "{{ rs_status.stdout_lines }}"

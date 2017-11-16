@@ -1,0 +1,56 @@
+---
+- name: include os specific variables
+  include_vars: "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.yml"
+
+- include: ansible_packages.yml
+
+- name: disable {{ iptables_service }} on boot and stop {{ iptables_service }} service
+  service:
+    name: "{{ iptables_service }}"
+    state: stopped
+    enabled: no
+  failed_when: false
+
+- name: set hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: set selinux to permissive
+  selinux:
+    policy: targeted
+    state: permissive
+
+- name: install epel and cityfan repos
+  yum:
+    name: "{{ item.url }}"
+    state: present
+  with_items:
+    - url: "{{ epel_repo }}"
+    - url: "{{ cityfan_repo }}"
+
+- name: install basic packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - sysstat
+    - wget
+    - ntp
+    - bind-utils
+    - zip
+    - unzip
+    - rsync
+    - openssh-clients
+    - mlocate
+    - telnet
+    - tcpdump
+    - git
+    - libcurl
+    - net-tools
+
+- name: update all packages
+  yum:
+    name: "*"
+    state: latest
+
+- include: docker.yml

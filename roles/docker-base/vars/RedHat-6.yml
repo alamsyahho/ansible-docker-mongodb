@@ -1,0 +1,5 @@
+---
+epel_repo: https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+cityfan_repo: http://www.city-fan.org/ftp/contrib/yum-repo/city-fan.org-release-1-13.rhel6.noarch.rpm
+
+iptables_service: iptables

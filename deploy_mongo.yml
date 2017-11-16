@@ -1,0 +1,7 @@
+- hosts: mongo-servers
+  roles:
+    - docker-base
+    - docker-mongo
+  user: centos
+  become: true
+  become_method: sudo
