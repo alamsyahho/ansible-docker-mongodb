@@ -24,10 +24,14 @@ resource "aws_instance" "mongo" {
   subnet_id = "${aws_subnet.my_subnet.0.id}"
 
   ebs_block_device {
-    device_name = "/dev/sdg"
+    device_name = "/dev/sdb"
     volume_size = 1000
     volume_type = "gp2"
     delete_on_termination = true
+  }
+
+  provisioner "local-exec" {
+    command = "sleep 60; ANSIBLE_HOST_KEY_CHECKING=False ansible all -i ${self.public_ip}, -m hostname -a 'name=${self.tags.Name}.${aws_route53_zone.default.name}' -b -u centos"
   }
 
 }
