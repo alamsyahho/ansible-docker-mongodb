@@ -1,0 +1,40 @@
+---
+- name: create volume group
+  lvg:
+    vg: vg_data
+    pvs: /dev/xvdb
+    pesize: 8
+
+- name: create logical volume
+  lvol:
+    vg: vg_data
+    lv: "{{ item.lv_name }}"
+    size: "{{ item.lv_size}}"
+    shrink: false
+  with_items:
+    - lv_name: lv_mongoLog
+      lv_size: 1g
+    - lv_name: lv_dockerData
+      lv_size: 100%FREE
+  when:
+    - ansible_lvm['vgs']['vg_data']['free_g'] != "0"
+
+- name: create xfs filesystem
+  filesystem:
+    dev: "{{ item }}"
+    fstype: xfs
+  with_items:
+    - /dev/vg_data/lv_mongoLog
+    - /dev/vg_data/lv_dockerData
+
+- name: mount logical volume
+  mount:
+    src: "{{ item.lv_device }}"
+    path: "{{ item.mount_path}}"
+    fstype: xfs
+    state: present
+  with_items:
+    - lv_device: /dev/vg_data/lv_mongoLog
+      mount_path: "{{ mongodb_logdir }}"
+    - lv_device: /dev/vg_data/lv_dockerData
+      mount_path: /var/lib/docker

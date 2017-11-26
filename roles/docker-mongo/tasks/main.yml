@@ -32,6 +32,7 @@
     state: started
     command: "mongod --replSet {{ replica_set_name }} --logpath {{mongodb_logdir}}/mongodb.log --logappend --keyFile {{ mongodb_datadir}}/secret"
     volumes:
+      - "mongoData-{{ ansible_hostname }}:/data/db"
       - "{{ mongodb_logdir }}:{{ mongodb_logdir }}"
       - "{{ mongodb_host_dir }}/secret:{{ mongodb_datadir }}/secret"
     ports:
