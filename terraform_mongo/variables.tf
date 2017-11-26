@@ -30,7 +30,7 @@ variable "layers_count" {
 }
 
 variable "domain" {
-  default = "test.com."
+  default = "test.com"
 }
 
 variable "instance_type" {
